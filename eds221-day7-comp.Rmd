@@ -1,0 +1,107 @@
+---
+title: "day7"
+author: "Jake Eisaguirre"
+date: "8/17/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(palmerpenguins)
+```
+
+Warm up task :
+```{r}
+
+new_peng <- penguins %>%
+  
+  filter(island %in% c("Biscoe", "Dream")) %>% 
+  
+  select(-year,-sex) %>% 
+  
+  mutate(body_mass_kg = body_mass_g / 1000) %>%
+  
+  rename(location = island )
+  
+
+peng <- penguins %>% 
+  
+  filter(species == "Adelie") %>%
+  
+  drop_na(flipper_length_mm) %>% 
+  
+  group_by(sex) %>% 
+  
+  summarize(
+    mean_flip = mean(flipper_length_mm),
+    sd_flip = sd(flipper_length_mm),
+    sample_size = n()
+  )
+  
+  
+
+
+```
+
+## Joins practice 
+
+```{r}
+
+animal <- tibble::tribble(
+  ~location,   ~species,  ~maturity,
+   "lagoon",   "bobcat",    "adult",
+    "bluff",   "coyote", "juvenile",
+    "creek",      "fox",    "adult",
+     "oaks", "squirrel", "juvenile",
+    "bluff",   "bobcat",    "adult"
+  )
+
+site <- tibble::tribble(
+           ~location,      ~full_site_name, ~jurisdiction,
+             "beach",       "Goleta Beach",     "SB City",
+            "lagoon",        "UCSB Lagoon",        "UCSB",
+             "bluff",       "Ellwood Mesa",     "SB City",
+              "oaks", "Fremont Campground",        "USFS",
+           )
+
+
+```
+
+## full join
+```{r}
+
+full <- full_join(animal, site, by = "location")
+
+```
+
+## Left join
+```{r}
+
+left <- left_join(animal, site, by = "location")
+
+```
+
+##inner join
+```{r}
+
+inner <- inner_join(animal, site, by = "location")
+
+```
+
+##filtering join
+```{r}
+
+animals_semi <- semi_join(animal, site, by = "location")
+
+```
+
+## anti join
+```{r}
+
+anti <- anti_join(animal, site, by = "location")
+
+aanti <- anti_join(site, animal, by = "location")
+
+```
+
